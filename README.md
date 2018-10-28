@@ -26,13 +26,13 @@ In such case, we have directory structures like dataset/Img and dataset/labels
 python train_Predictor.py
 
 4. test a fashion-attribute predictor
-python Predictor.py
+python Predict.py
 
 5. train a fashion-attribute retriever (Triplet loss)
 python train_Retriever.py
 
 6. test a fashion-attribute predictor
-python Retriever.py
+python ImageRetrieve.py
 
 5. demo
 python demo.py --line_num [line_num]
