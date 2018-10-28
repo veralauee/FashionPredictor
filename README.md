@@ -42,9 +42,9 @@ line_num represents a line in dataset/labels/test.txt, which is the path of an t
 
 
 =======
-# fashion-detection
-predict attributes of fashion items
-retrieve same fashion items
+predict attributes of fashion items (done)
+retrieve same fashion items (done)
+retrieve compatible fashion sets (to do)
 
 =============
 If you have further question, please contact Xin Liu(xin.liu4@duke.edu), Ziwei Liu(lz013@ie.cuhk.edu.hk)
