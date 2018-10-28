@@ -21,8 +21,6 @@ import pdb
 
 from data.RoI_data_loader import RoI_data_loader
 from data.ThreeD_data_loader import ThreeD_data_loader
-from data.RoI_data_processing import RoIDataProcessing 
-from data.ThreeD_data_processing import ThreeDDataProcessing
 
 from models.config import cfg
 from models.AttrNet import build_network
