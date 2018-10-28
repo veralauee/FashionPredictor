@@ -2,7 +2,6 @@
 fashion predictor and retriever
 
 =======
-# fashion-detection
 
 1. create a model to save pretrained ImageNet weigths
 cd saved_models
