@@ -20,7 +20,6 @@ from collections import OrderedDict
 import pdb
 
 from data.RoI_data_loader import RoI_data_loader
-from data.ThreeD_data_loader import ThreeD_data_loader
 
 from models.config import cfg
 from models.AttrNet import build_network
@@ -115,15 +114,7 @@ def train_model(train_loader, model, criterion, optimizer, epoch, epochs):
 
     model.train()
 
-    if train_loader is None:
-        print("------- we cannot load training data -------")
     for iter, traindata in enumerate(train_loader):
-
-        if cfg.pooling == '3D_Pooling':
-            train_inputs, train_labels, u,v = traindata        
-            train_inputs, train_labels, u,v = torch.autograd.Variable(train_inputs.cuda(async=True)).float(), torch.autograd.Variable(train_labels.cuda(async=True)).float(), torch.autograd.Variable(u.cuda(async=True)).float(), torch.autograd.Variable(v.cuda(async=True))
-            optimizer.zero_grad()
-            train_outputs = model(train_inputs, u,v) 
             
         if cfg.pooling == 'RoI_Pooling':
             train_inputs, train_labels, landmarks = traindata
@@ -143,15 +134,6 @@ def train_model(train_loader, model, criterion, optimizer, epoch, epochs):
         print('Training Phase: Epoch: [%2d][%2d/%2d]\tIteration Loss: %.4f' %
               (iter, epoch, epochs, loss.data[0]))
 
-        #if iter ==10:
-        #    checkpoint_name = os.path.join(cfg.saved_model_dir, cfg.arch + cfg.pooling +'_epoch%d'%epoch+ 'iter_%d'%iter+'.tar')
-        #    torch.save({'epoch': epoch,
-        #                'arch': cfg.arch,
-        #                'state_dict': model.state_dict(),
-        #                'optimizer' : optimizer.state_dict(),
-        #    }, checkpoint_name)
-
-        #    print(checkpoint_name)
             
 def adjust_learning_rate(optimizer, epoch):
     """Sets the learning rate to the initial LR decayed by 10 every 30 epochs"""
