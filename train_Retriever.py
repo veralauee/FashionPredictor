@@ -24,7 +24,7 @@ from data.data_processing import DataProcessing
 
 from models.config import cfg
 from models.AttrNet import build_network
-from models.loss.WeightedBCELoss import *
+import models.loss.VHDM_loss
 
 def main():
 
@@ -81,8 +81,8 @@ def main():
     elif cfg.loss == 'MLS':
         criterion = nn.MultiLabelMarginLoss()
     
-    else: # default : BCE+sigmold
-        criterion = WeightedBCELoss( reduce=False, size_average=False)
+    else: # default : VTHM 
+        criterion = VTHM_loss.create()
         
     if cfg.opt=='Adam':
         optimizer = torch.optim.Adam(model.parameters(), cfg.lr,

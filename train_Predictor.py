@@ -19,8 +19,10 @@ from torch.utils.data import DataLoader
 from collections import OrderedDict
 import pdb
 
-from data.data_loader import data_loader
-from data.data_processing import DataProcessing 
+from data.RoI_data_loader import RoI_data_loader
+from data.ThreeD_data_loader import ThreeD_data_loader
+from data.RoI_data_processing import RoIDataProcessing 
+from data.ThreeD_data_processing import ThreeDDataProcessing
 
 from models.config import cfg
 from models.AttrNet import build_network
@@ -34,7 +36,6 @@ def main():
     # build the network
     model = build_network()    
     print model
-    print(model.state_dict())
     print('model',len(model.state_dict()))
     # use multiple gpus
     if torch.cuda.device_count() > 1:
@@ -70,10 +71,9 @@ def main():
         else:
             print("=> no checkpoint found at '{}'".format(cfg.resume))
     
-    train_loader = data_loader( BatchSize=cfg.batch_size,
-                               NumWorkers = cfg.num_workers).train_loader
-    if train_loader is None:
-        print("========= train_loader is None===============")
+    train_loader = RoI_data_loader( BatchSize=cfg.batch_size,
+                                    NumWorkers = cfg.num_workers).train_loader
+
        
     # define loss function (criterion) and optimizer
     # this loss combines a Sigmoid layer and the BCELoss in one single class
@@ -120,13 +120,19 @@ def train_model(train_loader, model, criterion, optimizer, epoch, epochs):
     if train_loader is None:
         print("------- we cannot load training data -------")
     for iter, traindata in enumerate(train_loader):
-        
-        train_inputs, train_labels, u,v = traindata        
-        train_inputs, train_labels, u,v = torch.autograd.Variable(train_inputs.cuda(async=True)).float(), torch.autograd.Variable(train_labels.cuda(async=True)).float(), torch.autograd.Variable(u.cuda(async=True)).float(), torch.autograd.Variable(v.cuda(async=True))
-        
-        # compute gradient and do SGD step
-        optimizer.zero_grad()
-        train_outputs = model(train_inputs, u,v)
+
+        if cfg.pooling == '3D_Pooling':
+            train_inputs, train_labels, u,v = traindata        
+            train_inputs, train_labels, u,v = torch.autograd.Variable(train_inputs.cuda(async=True)).float(), torch.autograd.Variable(train_labels.cuda(async=True)).float(), torch.autograd.Variable(u.cuda(async=True)).float(), torch.autograd.Variable(v.cuda(async=True))
+            optimizer.zero_grad()
+            train_outputs = model(train_inputs, u,v) 
+            
+        if cfg.pooling == 'RoI_Pooling':
+            train_inputs, train_labels, landmarks = traindata
+            train_inputs, train_labels, landmarks = torch.autograd.Variable(train_inputs.cuda(async=True)).float(), torch.autograd.Variable(train_labels.cuda(async=True)).float(), torch.autograd.Variable(landmarks.cuda(async=True))
+            optimizer.zero_grad()
+            train_outputs = model(train_inputs, landmarks)
+            
         if cfg.loss == 'BCE':
             train_outputs = F.sigmoid(train_outputs)
         

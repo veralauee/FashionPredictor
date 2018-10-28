@@ -25,8 +25,8 @@ from collections import OrderedDict
 import matplotlib
 import matplotlib.pyplot as plt
 
-from data.data_loader import data_loader
-from data.data_processing import DataProcessing
+from data.ThreeD_data_loader import ThreeD_data_loader
+from data.ThreeD_data_processing import ThreeDDataProcessing
 
 from models.AttrNet import build_network
 from utils.count_attr import count_attribute
@@ -160,7 +160,7 @@ def main():
     cudnn.benchmark = False
     
 
-    test_loader = data_loader( BatchSize=cfg.batch_size,
+    test_loader = ThreeD_data_loader( BatchSize=cfg.batch_size,
                                NumWorkers = cfg.num_workers).test_loader
     print("test data_loader are ready!")
     
